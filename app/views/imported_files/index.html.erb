@@ -1,0 +1,25 @@
+<%- model_class = ImportedFile -%>
+<div class="page-header">
+  <h1><%=t '.title', :default => model_class.model_name.human.pluralize.titleize %></h1>
+</div>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th><%= model_class.human_attribute_name(:name) %></th>
+      <th><%= model_class.human_attribute_name(:created_at) %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @imported_files.each do |imported_file| %>
+      <tr>
+        <td><%= imported_file.name %></td>
+        <td><%=l imported_file.created_at %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= form_tag import_path, multipart: true do %>
+    <%= file_field_tag :file, class: "btn btn-file" %>
+    <%= submit_tag "Importer des reservations", class: "btn btn-info" %>
+    <% end %>
