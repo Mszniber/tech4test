@@ -22,60 +22,60 @@ ActiveRecord::Schema.define(version: 20161124160515) do
   end
 
   create_table "clients", force: :cascade do |t|
-    t.string   "last_name"
-    t.string   "first_name"
-    t.string   "email"
-    t.string   "address"
-    t.string   "postal_code"
-    t.string   "country"
+    t.string   "last_name",   null: false
+    t.string   "first_name",  null: false
+    t.string   "email",       null: false
+    t.string   "address",     null: false
+    t.string   "postal_code", null: false
+    t.string   "country",     null: false
     t.integer  "age"
     t.boolean  "sex"
-    t.string   "type"
+    t.string   "type",        null: false
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
   end
 
   create_table "imported_files", force: :cascade do |t|
-    t.integer  "user_id"
-    t.string   "name"
+    t.integer  "user_id",    null: false
+    t.string   "name",       null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
   create_table "performances", force: :cascade do |t|
-    t.integer  "show_id"
-    t.string   "name"
-    t.datetime "date"
-    t.datetime "end_date"
+    t.integer  "show_id",    null: false
+    t.string   "name",       null: false
+    t.datetime "date",       null: false
+    t.datetime "end_date",   null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
   create_table "reservations", force: :cascade do |t|
     t.integer  "imported_file_id"
-    t.integer  "ticket_id"
-    t.integer  "cart_id"
     t.integer  "client_id"
-    t.datetime "date"
-    t.datetime "access_date"
-    t.string   "seller"
+    t.datetime "date",             null: false
+    t.string   "seller",           null: false
+    t.integer  "cart_id"
     t.datetime "created_at",       null: false
     t.datetime "updated_at",       null: false
   end
 
   create_table "shows", force: :cascade do |t|
-    t.string   "name"
+    t.string   "name",       null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
   create_table "tickets", force: :cascade do |t|
     t.integer  "performance_id"
+    t.integer  "reservation_id"
     t.string   "serie"
     t.string   "floor"
     t.string   "type"
-    t.string   "pricing"
-    t.float    "price"
+    t.string   "pricing",        null: false
+    t.float    "price",          null: false
+    t.datetime "access_date"
     t.datetime "created_at",     null: false
     t.datetime "updated_at",     null: false
   end

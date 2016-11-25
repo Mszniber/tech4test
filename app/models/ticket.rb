@@ -1,4 +1,4 @@
 class Ticket < ActiveRecord::Base
   belongs_to :performance
-  has_one :reservation
+  belongs_to :reservation
 end

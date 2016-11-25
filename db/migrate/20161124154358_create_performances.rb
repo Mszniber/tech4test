@@ -1,10 +1,10 @@
 class CreatePerformances < ActiveRecord::Migration
   def change
     create_table :performances do |t|
-      t.belongs_to :show
-      t.string :name
-      t.datetime :date
-      t.datetime :end_date
+      t.belongs_to :show, null: false
+      t.string :name, null: false
+      t.datetime :date, null: false
+      t.datetime :end_date, null: false
 
       t.timestamps null: false
     end
