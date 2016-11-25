@@ -18,6 +18,7 @@ Rails.application.routes.draw do
   resources :imported_files
   get 'reservations' => 'reservations#index'
   get 'tickets' => 'tickets#index'
+  get 'export_tickets' => 'tickets#export_tickets'
   get 'stats' => 'stats#index'
 
 

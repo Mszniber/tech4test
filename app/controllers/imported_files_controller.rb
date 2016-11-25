@@ -1,5 +1,4 @@
 class ImportedFilesController < ApplicationController
-  require 'csv'
   def index
     @imported_files = ImportedFile.where(user_id: current_user.id)
   end
