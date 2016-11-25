@@ -35,6 +35,28 @@ class Ticket < ActiveRecord::Base
     "Sexe"
   ] ## Header values of CSV
 
+  def self.generate_hash(import_file_params)
+    ticket = Ticket.where(["id = ?", import_file_params["Numero billet"]]).first
+    unless ticket.present?
+      ticket_params = {}
+      ticket_params["id"] = import_file_params["Numero billet"]
+      ticket_params["reservation_id"] = import_file_params["Reservation"]
+      ticket_params["performance_id"] = import_file_params["Cle representation"]
+      ticket_params["serie"] = import_file_params["Serie"]
+      ticket_params["floor"] = import_file_params["Etage"]
+      ticket_params["product_type"] = import_file_params["Type de produit"]
+      ticket_params["pricing"] = import_file_params["Tarif"]
+      ticket_params["price"] = import_file_params["Prix"]
+      if import_file_params["Date acces"].present?
+        access_date = import_file_params["Date acces"]
+        access_date = access_date[6] + access_date[7] + "/"  + access_date[3] + access_date[4] + "/" + access_date[0] + access_date[1]
+        access_datetime = access_date + " " + import_file_params["Heure acces"]
+        ticket_params["access_date"] = DateTime.parse(access_date)
+      end
+      ticket_params
+    end
+  end
+
   def self.to_csv(options = {})
     CSV.generate(:col_sep => ";") do |csv|
       csv << CSV_HEADERS
