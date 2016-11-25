@@ -8,11 +8,11 @@ class ImportedFilesController < ApplicationController
   end
 
   def import
-    file = params.permit(:file)[:file]
+    file = file_params
     if file.content_type == "text/csv"
       filename = file.original_filename
       if new_file = ImportedFile.create!(name: filename, user_id: current_user.id)
-        file = file_params
+        file = file_params.read
         csv = CSV.parse(file, :headers => true, :col_sep => ";")
         full_errors = ""
         csv.each do |row|
@@ -34,6 +34,9 @@ class ImportedFilesController < ApplicationController
         render 'index'
       end
     end
+  rescue ActionController::ParameterMissing
+    flash[:error] = "Fichier inexistant ou non accepté"
+    redirect_to imported_files_path
   end
 
   def create_cart(cart_id)
@@ -125,7 +128,7 @@ class ImportedFilesController < ApplicationController
       client
     else
       client_params = {}
-      client_params["last_name"] = import_file_params["Nom"].to_s
+      client_params["last_name"] = import_file_params["Nom"]
       client_params["first_name"] = import_file_params["Prenom"]
       client_params["email"] = import_file_params["Email"]
       client_params["address"] = import_file_params["Adresse"]
@@ -141,6 +144,6 @@ class ImportedFilesController < ApplicationController
   private
   def file_params
     params.require(:file)
-    params.permit(:file)[:file].read
+    params.permit(:file)[:file]
   end
 end

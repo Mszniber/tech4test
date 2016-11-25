@@ -2,42 +2,42 @@ class Ticket < ActiveRecord::Base
   require 'csv'
   belongs_to :performance
   belongs_to :reservation
+  CSV_HEADERS = [
+    "Numero billet",
+    "Commande",
+    "Reservation",
+    "Date reservation",
+    "Heure reservation",
+    "Cle spectacle",
+    "Spectacle",
+    "Cle representation",
+    "Representation",
+    "Date representation",
+    "Heure representation",
+    "Date fin representation",
+    "Heure fin representation",
+    "Prix",
+    "Date acces",
+    "Heure acces",
+    "Tarif",
+    "Type de client",
+    "Type de produit",
+    "Serie",
+    "Etage",
+    "Filiere de vente",
+    "Nom",
+    "Prenom",
+    "Email",
+    "Adresse",
+    "Code postal",
+    "Pays",
+    "Age",
+    "Sexe"
+  ] ## Header values of CSV
 
   def self.to_csv(options = {})
     CSV.generate(:col_sep => ";") do |csv|
-      csv <<
-        [
-          "Numero billet",
-          "Commande",
-          "Reservation",
-          "Date reservation",
-          "Heure reservation",
-          "Cle spectacle",
-          "Spectacle",
-          "Cle representation",
-          "Representation",
-          "Date representation",
-          "Heure representation",
-          "Date fin representation",
-          "Heure fin representation",
-          "Prix",
-          "Date acces",
-          "Heure acces",
-          "Tarif",
-          "Type de client",
-          "Type de produit",
-          "Serie",
-          "Etage",
-          "Filiere de vente",
-          "Nom",
-          "Prenom",
-          "Email",
-          "Adresse",
-          "Code postal",
-          "Pays",
-          "Age",
-          "Sexe"
-        ] ## Header values of CSV
+      csv << CSV_HEADERS
       all.each do |ticket|
         csv <<
           [
