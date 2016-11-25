@@ -27,7 +27,7 @@
         <li><a href="/tickets">Billets</a></li>
         <li><a href="/reservations">Réservations</a></li>
         <li><a href="/stats">Statistiques</a></li>
-        <li><a href="/users/sign_out">Se déconnecter</a></li>
+        <li><%= link_to "Se déconnecter", destroy_user_session_path, :method => :delete %></li>
       </ul>
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->
