@@ -72,7 +72,7 @@ ActiveRecord::Schema.define(version: 20161124160515) do
     t.integer  "reservation_id"
     t.string   "serie"
     t.string   "floor"
-    t.string   "type"
+    t.string   "product_type"
     t.string   "pricing",        null: false
     t.float    "price",          null: false
     t.datetime "access_date"

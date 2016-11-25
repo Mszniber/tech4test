@@ -14,6 +14,7 @@ class ImportedFilesController < ApplicationController
       show = create_show(import_file_params)
       client = create_client(import_file_params)
       performance = create_performance(import_file_params)
+      ticket = create_ticket(import_file_params)
     end
     file = params.permit(:file)[:file]
     filename = file.original_filename
@@ -23,6 +24,26 @@ class ImportedFilesController < ApplicationController
     else
       render 'index'
     end
+  end
+
+  def create_ticket(import_file_params)
+    ticket_params = {}
+    ticket_params["id"] = import_file_params["Numero billet"]
+    ticket_params["reservation_id"] = import_file_params["Reservation"]
+    ticket_params["performance_id"] = import_file_params["Cle representation"]
+    ticket_params["serie"] = import_file_params["Serie"]
+    ticket_params["floor"] = import_file_params["Etage"]
+    ticket_params["product_type"] = import_file_params["Type de produit"]
+    ticket_params["pricing"] = import_file_params["Tarif"]
+    ticket_params["price"] = import_file_params["Prix"]
+    if import_file_params["Date acces"].present?
+      access_date = import_file_params["Date acces"]
+      access_date = access_date[6] + access_date[7] + "/"  + access_date[3] + access_date[4] + "/" + access_date[0] + access_date[1]
+      access_datetime = access_date + " " + import_file_params["Heure acces"]
+      ticket_params["access_date"] = DateTime.parse(access_date)
+    end
+    ticket = Ticket.new(ticket_params) unless Ticket.where(["id = ?", ticket_params["id"]]).first.present?
+    ticket if ticket.present? && ticket.save
   end
 
   def create_performance(import_file_params)
@@ -38,18 +59,16 @@ class ImportedFilesController < ApplicationController
     end_date = end_date[6] + end_date[7] + "/"  + end_date[3] + end_date[4] + "/" + end_date[0] + end_date[1]
     end_datetime = end_date + " " + import_file_params["Heure fin representation"]
     performance_params["end_date"] = DateTime.parse(datetime)
-    performance = Performance.where(["id = ?", performance_params["id"]]).first
-    performance = Performance.new(performance_params) if !performance.present?
-    performance if performance.save
+    performance = Performance.new(performance_params) unless Performance.where(["id = ?", performance_params["id"]]).first.present?
+    performance if performance.present? && performance.save
   end
 
   def create_show(import_file_params)
     show_params = {}
     show_params["name"] = import_file_params["Spectacle"]
     show_params["id"] = import_file_params["Cle spectacle"]
-    show = Show.where(["id = ?", show_params["id"]]).first
-    show = Show.new(show_params) if !show.present?
-    show if show.save
+    show = Show.new(show_params) unless Show.where(["id = ?", show_params["id"]]).first.present?
+    show if show.present? && show.save
   end
 
   def create_client(import_file_params)
@@ -63,8 +82,7 @@ class ImportedFilesController < ApplicationController
     client_params["age"] = import_file_params["Age"].to_i if import_file_params["Age"].present?
     client_params["sex"] = import_file_params["Sexe"]=="F" ? false : true if import_file_params["Sexe"].present?
     client_params["type"] = import_file_params["Type de client"]
-    client = Client.find_by_email(client_params["email"])
-    client = Client.new(client_params) if !client.present?
+    client = Client.new(client_params) unless Client.find_by_email(client_params["email"]).present?
     client if client.present? && client.save
   end
 
