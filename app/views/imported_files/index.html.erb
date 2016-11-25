@@ -1,19 +1,21 @@
 <%- model_class = ImportedFile -%>
 <div class="page-header">
-  <h1><%=t '.title', :default => model_class.model_name.human.pluralize.titleize %></h1>
+  <h1>Fichiers importés</h1>
 </div>
 <table class="table table-striped">
   <thead>
     <tr>
-      <th><%= model_class.human_attribute_name(:name) %></th>
-      <th><%= model_class.human_attribute_name(:created_at) %></th>
+      <th><%= model_class.human_attribute_name(:nom_du_fichier) %></th>
+      <th><%= model_class.human_attribute_name(:créé_le) %></th>
+      <th><%= model_class.human_attribute_name(:nombre_de_reservations) %></th>
     </tr>
   </thead>
   <tbody>
     <% @imported_files.each do |imported_file| %>
       <tr>
-        <td><%= imported_file.name %></td>
-        <td><%=l imported_file.created_at %></td>
+        <td><%= link_to imported_file.name, imported_file_path(imported_file) %></td>
+        <td><%= imported_file.created_at.strftime("%d/%m/%Y %H:%M") %></td>
+        <td><%= imported_file.reservations.count %></td>
       </tr>
     <% end %>
   </tbody>
@@ -21,5 +23,5 @@
 
 <%= form_tag import_path, multipart: true do %>
     <%= file_field_tag :file, class: "btn btn-file" %>
-    <%= submit_tag "Importer des reservations", class: "btn btn-info" %>
+    <%= submit_tag "Importer des reservations", class: "btn btn-primary btn-lg" %>
     <% end %>

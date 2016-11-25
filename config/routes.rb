@@ -1,10 +1,25 @@
 Rails.application.routes.draw do
+  get 'tickets/index'
+
+  get 'tickets/show'
+
+  get 'stats/index'
+
+  get 'reservations/index'
+
+  get 'reservations/show'
+
   devise_for :users
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
   # You can have the root of your site routed with "root"
   root 'imported_files#index'
+  resources :imported_files
+  get 'reservations' => 'reservations#index'
+  get 'tickets' => 'tickets#index'
+  get 'stats' => 'stats#index'
+
 
   post 'import' => 'imported_files#import'
 

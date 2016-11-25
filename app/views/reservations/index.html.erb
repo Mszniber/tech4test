@@ -1,0 +1,26 @@
+<%- model_class = Reservation -%>
+<div class="page-header">
+  <h1><%=t '.title', :default => model_class.model_name.human.pluralize.titleize %></h1>
+</div>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th><%= model_class.human_attribute_name(:id) %></th>
+      <th><%= model_class.human_attribute_name(:client_id) %></th>
+      <th><%= model_class.human_attribute_name(:date) %></th>
+      <th><%= model_class.human_attribute_name(:seller) %></th>
+      <th><%= model_class.human_attribute_name(:cart_id) %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @reservations.each do |reservation| %>
+      <tr>
+        <td><%= reservation.id %></td>
+        <td><%= reservation.client.email %></td>
+        <td><%= reservation.date.strftime("%d/%m/%y %H:%M:%S") %></td>
+        <td><%= reservation.seller %></td>
+        <td><%= reservation.cart_id %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

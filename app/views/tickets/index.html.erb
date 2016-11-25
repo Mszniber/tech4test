@@ -1,0 +1,36 @@
+<%- model_class = Ticket -%>
+<div class="page-header">
+  <h1><%=t '.title', :default => model_class.model_name.human.pluralize.titleize %></h1>
+</div>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th><%= model_class.human_attribute_name(:numero_billet) %></th>
+      <th><%= model_class.human_attribute_name(:representation) %></th>
+      <th><%= model_class.human_attribute_name(:cle_reservation) %></th>
+      <th><%= model_class.human_attribute_name(:série) %></th>
+      <th><%= model_class.human_attribute_name(:etage) %></th>
+      <th><%= model_class.human_attribute_name(:type_de_produit) %></th>
+      <th><%= model_class.human_attribute_name(:tarif) %></th>
+      <th><%= model_class.human_attribute_name(:prix) %></th>
+      <th><%= model_class.human_attribute_name(:date_acces) %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @tickets.each do |ticket| %>
+      <tr>
+        <td><%= ticket.id %></td>
+        <td><%= ticket.performance.name %></td>
+        <td><%= ticket.reservation_id %></td>
+        <td><%= ticket.serie %></td>
+        <td><%= ticket.floor %></td>
+        <td><%= ticket.product_type %></td>
+        <td><%= ticket.pricing %></td>
+        <td><%= ticket.price %></td>
+        <td><% if ticket.access_date.present? %>
+          <%= ticket.access_date.strftime("%d/%m/%y") %>
+        <% end %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

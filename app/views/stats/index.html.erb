@@ -1,0 +1,25 @@
+<div class="page-header">
+  <h1>Statistiques</h1>
+</div>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Reservations</th>
+      <th>Acheteurs</th>
+      <th>Age moyen</th>
+      <th>Prix moyen/spectacle</th>
+      <th>Prix moyen/client</th>
+      <th>Prix moyen/panier</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><%= Reservation.count %></td>
+        <td><%= Client.count %></td>
+        <td><%= age_mean(@clients) %></td>
+        <td><%= price_mean_by_show(@shows) %></td>
+        <td><%= price_mean_by_client(@clients) %></td>
+        <td><%= price_mean_by_cart(@carts) %></td>
+      </tr>
+  </tbody>
+</table>

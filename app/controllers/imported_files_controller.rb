@@ -1,27 +1,37 @@
 class ImportedFilesController < ApplicationController
   require 'csv'
-  before_action :authenticate_user!
   def index
     @imported_files = ImportedFile.where(user_id: current_user.id)
+  end
+
+  def show
+    @imported_file = ImportedFile.includes(reservations: [:client]).find(params[:id])
   end
 
   def import
     file = params.permit(:file)[:file]
     filename = file.original_filename
-    new_file = ImportedFile.create!(name: filename, user_id: current_user.id)
-    file = file_params
-    csv = CSV.parse(file, :headers => true, :col_sep => ";")
-    full_errors = ""
-    csv.each do |row|
-      import_file_params = row.to_hash
-      show = create_show(import_file_params)
-      client = create_client(import_file_params)
-      performance = create_performance(import_file_params)
-      ticket = create_ticket(import_file_params)
-      reservation = create_reservation(import_file_params, client.id, new_file.id)
-      cart = create_cart(import_file_params["Commande"]) if import_file_params["Commande"].present?
+    if new_file = ImportedFile.create!(name: filename, user_id: current_user.id)
+      file = file_params
+      csv = CSV.parse(file, :headers => true, :col_sep => ";")
+      full_errors = ""
+      csv.each do |row|
+        import_file_params = row.to_hash
+        show = create_show(import_file_params)
+        client = create_client(import_file_params)
+        performance = create_performance(import_file_params)
+        ticket = create_ticket(import_file_params)
+        reservation = create_reservation(import_file_params, client.id, new_file.id)
+        cart = create_cart(import_file_params["Commande"]) if import_file_params["Commande"].present?
+      end
+      redirect_to root_path
+    else
+      new_file.errors.messages.each do |k, v|
+        full_errors += k.to_s + " : " + v.to_s + " / "
+      end
+      flash[:error] = full_errors if !full_errors.empty?
+      render 'index'
     end
-    redirect_to root_path
   end
 
   def create_cart(cart_id)
