@@ -9,27 +9,30 @@ class ImportedFilesController < ApplicationController
 
   def import
     file = params.permit(:file)[:file]
-    filename = file.original_filename
-    if new_file = ImportedFile.create!(name: filename, user_id: current_user.id)
-      file = file_params
-      csv = CSV.parse(file, :headers => true, :col_sep => ";")
-      full_errors = ""
-      csv.each do |row|
-        import_file_params = row.to_hash
-        show = create_show(import_file_params)
-        client = create_client(import_file_params)
-        performance = create_performance(import_file_params)
-        ticket = create_ticket(import_file_params)
-        reservation = create_reservation(import_file_params, client.id, new_file.id)
-        cart = create_cart(import_file_params["Commande"]) if import_file_params["Commande"].present?
+    if file.content_type == "text/csv"
+      filename = file.original_filename
+      if new_file = ImportedFile.create!(name: filename, user_id: current_user.id)
+        file = file_params
+        csv = CSV.parse(file, :headers => true, :col_sep => ";")
+        full_errors = ""
+        csv.each do |row|
+          import_file_params = row.to_hash
+          show = create_show(import_file_params)
+          client = create_client(import_file_params)
+          performance = create_performance(import_file_params)
+          ticket = create_ticket(import_file_params)
+          reservation = create_reservation(import_file_params, client.id, new_file.id)
+          cart = create_cart(import_file_params["Commande"]) if import_file_params["Commande"].present?
+        end
+        flash[:success] = "Fichier #{new_file.name} importé avec succès, création de #{new_file.reservations.count} nouvelles réservations"
+        redirect_to root_path
+      else
+        new_file.errors.messages.each do |k, v|
+          full_errors += k.to_s + " : " + v.to_s + " / "
+        end
+        flash[:error] = full_errors if !full_errors.empty?
+        render 'index'
       end
-      redirect_to root_path
-    else
-      new_file.errors.messages.each do |k, v|
-        full_errors += k.to_s + " : " + v.to_s + " / "
-      end
-      flash[:error] = full_errors if !full_errors.empty?
-      render 'index'
     end
   end
 
